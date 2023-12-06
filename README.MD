@@ -176,6 +176,33 @@ And finally push your changes to the repository, the github action will deploy y
 
 If you need you can modify the github action workflow file `.github/workflows/main.yml` with your own configuration.
 
+## S3 Upload HTML Form
+```html
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>S3 Upload - HTML Form</h2>
+<!-- Copy the 'url' value returned by lambda -->
+    <form action="URL_VALUE" method="post" enctype="multipart/form-data">
+      <!-- Copy the 'fields' key:values returned by lambda -->
+      <input type="hidden" name="acl" value="VALUE" />
+      <input type="hidden" name="bucket" value="VALUE" />
+      <input type="hidden" name="X-Amz-Algorithm" value="VALUE" />
+      <input type="hidden" name="X-Amz-Credential" value="VALUE" />
+      <input type="hidden" name="X-Amz-Date" value="VALUE" />
+      <input type="hidden" name="X-Amz-Security-Token" value="VALUE" />
+      <input type="hidden" name="key" value="VALUE" />
+      <input type="hidden" name="Policy" value="VALUE"/>
+      <input type="hidden" name="X-Amz-Signature" value="VALUE" />
+      File:
+      <input type="file" name="file" /> <br />
+      <input type="submit" name="submit" value="Upload to Amazon S3" />
+    </form> 
+</body>
+</html>
+```
+
 <!-- SCRIPTS -->
 ## Scripts
 ### This assumes you have installed and configured the [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [sam-cli](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
