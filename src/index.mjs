@@ -14,10 +14,11 @@ export const handler = async (event) => {
 		const body = JSON.parse(event.body);
 		const path = body.path;
 		const file = body.file;
+		const region = body.region || "us-east-1";
 
-		const client = new S3Client({ region: "us-west-1" });
-		const Bucket = body.bucket || "randomcontent";
-		const Key = `${key}/${file}`;
+		const client = new S3Client({ region });
+		const Bucket = body.bucket;
+		const Key = `${path}/${file}`;
 		const Fields = {
 			acl: "bucket-owner-full-control",
 		};
@@ -38,7 +39,7 @@ export const handler = async (event) => {
 		return done(200, res);
 
 	} catch (error) {
-		console.error("🚀 ~ file: index.mjs:41 ~ handler ~ error", error)
+		console.error("🚀 ~ file: index.mjs:42 ~ handler ~ error", error)
 		return done(500, error);
 	}
 };
