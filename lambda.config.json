@@ -1,7 +1,7 @@
 {
-    "FunctionName": "lambda-github-actions",
-    "Description": "Lambda CI with github actions",
-    "Role":"GithubActionsRole",
+    "FunctionName": "sdk-storage-s3-upload-v1",
+    "Description": "SDK - Storage - S3 Upload",
+    "Role":"LambdaFullAccessRole",
     "Handler":"index.handler",
     "Runtime":"nodejs20.x",
     "Timeout": 10,
