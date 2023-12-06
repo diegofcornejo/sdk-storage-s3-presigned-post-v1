@@ -1,4 +1,5 @@
-import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { S3Client } from "@aws-sdk/client-s3";
 
 export const handler = async (event) => {
 
@@ -10,30 +11,34 @@ export const handler = async (event) => {
 	}
 
 	try {
-		// AWS SDK v3 example
-		const stsClient = new STSClient({ region: 'us-east-1' });
-		const stsCommand = new GetCallerIdentityCommand({});
-		const stsResponse = await stsClient.send(stsCommand);
-		console.log("🚀 ~ file: index.mjs:9 ~ handler ~ stsResponse:", stsResponse)
+		const body = JSON.parse(event.body);
+		const path = body.path;
+		const file = body.file;
 
-		// NodeJS 20 native support for fetch API - POKEAPI example
-		const pokeResponse = await fetch('https://pokeapi.co/api/v2/pokemon/ditto');
-		const ditto = await pokeResponse.json();
-		console.log("🚀 ~ file: index.mjs:14 ~ handler ~ ditto:", ditto)
+		const client = new S3Client({ region: "us-west-1" });
+		const Bucket = body.bucket || "randomcontent";
+		const Key = `${key}/${file}`;
+		const Fields = {
+			acl: "bucket-owner-full-control",
+		};
 
-		// Return all examples in response
+		const { url, fields } = await createPresignedPost(client, {
+			Bucket,
+			Key,
+			// Conditions,
+			Fields,
+			Expires: 3600, //Seconds before the presigned post expires. 3600 by default.
+		});
+
 		const res = {
-			message: 'AWS Lambda CI/CD with Github Actions',
-			event,
-			awsSdk: stsResponse,
-			pokeApi: ditto
-		}
+			url,
+			fields
+		};
 
-		return done(200, res)
+		return done(200, res);
 
 	} catch (error) {
-		console.error("🚀 ~ file: index.mjs:27 ~ handler ~ error", error)
-		return done(500, error)
+		console.error("🚀 ~ file: index.mjs:41 ~ handler ~ error", error)
+		return done(500, error);
 	}
-
 };
