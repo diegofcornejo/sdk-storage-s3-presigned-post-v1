@@ -33,6 +33,7 @@ export const handler = async (event) => {
 		const Key = `${path}/${file}`;
 		const Fields = {
 			acl: "bucket-owner-full-control",
+			"Content-Type": body.contentType || "application/octet-stream"
 		};
 
 		const { url, fields } = await createPresignedPost(client, {
