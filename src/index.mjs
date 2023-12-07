@@ -6,8 +6,20 @@ export const handler = async (event) => {
 	const done = (statusCode, body) => {
 		return {
 			statusCode,
+			headers: {
+				"Access-Control-Allow-Headers": "*",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+				"Access-Control-Allow-Credentials": true
+			},
 			body: JSON.stringify(body) // body must be string
 		};
+	}
+
+	// Enable CORS if you need to request directly from the browser
+	// this is necessary if the integration in apigateway is a lambda proxy
+	if (event.httpMethod === "OPTIONS") {
+		return done(200, {});
 	}
 
 	try {
