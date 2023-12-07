@@ -3,6 +3,8 @@ import { S3Client } from "@aws-sdk/client-s3";
 
 export const handler = async (event) => {
 
+	console.info(JSON.stringify(event));
+
 	const done = (statusCode, body) => {
 		return {
 			statusCode,
