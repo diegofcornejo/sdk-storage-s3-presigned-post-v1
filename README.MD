@@ -205,7 +205,6 @@ If you need you can modify the github action workflow file `.github/workflows/ma
 
 ## S3 Upload Javascript Example
 ```js
-
 // This is a simple example of how to upload a file to S3 using a presigned URL
 
 // First, we need to get a presigned URL from the API
@@ -216,7 +215,7 @@ const resp = await fetch(
     body: JSON.stringify({
       bucket: "bucket-name",
       path: "path/to/file", //without leading slash
-      file: file.name, 
+      file: file.name,
       contentType: file.type,
     }),
     headers: {
@@ -226,12 +225,15 @@ const resp = await fetch(
   }
 );
 
+// The response will contain a presigned URL and a set of fields
+const presigned = await resp.json();
+
 // Then, we need to upload the file to S3 using the presigned URL
 const form = new FormData();
 Object.entries(presigned.fields).forEach(([k, v]) => {
   form.append(k, v);
 })
-form.append("file", file);
+form.append("file", file); // file is a File object
 return axios({
   method: "POST",
   url: presigned.url,
@@ -244,7 +246,7 @@ return axios({
       (progressEvent.loaded * 100) / progressEvent.total
     );
     files[index].progress = percentCompleted;
-    setFiles([...files]);
+    setFiles([...files]); // update the state using react hooks
   },
 })
 ```
