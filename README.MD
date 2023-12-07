@@ -203,6 +203,52 @@ If you need you can modify the github action workflow file `.github/workflows/ma
 </html>
 ```
 
+## S3 Upload Javascript Example
+```js
+
+// This is a simple example of how to upload a file to S3 using a presigned URL
+
+// First, we need to get a presigned URL from the API
+const resp = await fetch(
+  `https://${SDK_API_URL}/v1/storage/s3/presigned`,
+  {
+    method: "POST",
+    body: JSON.stringify({
+      bucket: "bucket-name",
+      path: "path/to/file", //without leading slash
+      file: file.name, 
+      contentType: file.type,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    redirect: "follow",
+  }
+);
+
+// Then, we need to upload the file to S3 using the presigned URL
+const form = new FormData();
+Object.entries(presigned.fields).forEach(([k, v]) => {
+  form.append(k, v);
+})
+form.append("file", file);
+return axios({
+  method: "POST",
+  url: presigned.url,
+  data: form,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+  onUploadProgress: (progressEvent) => {
+    const percentCompleted = Math.round(
+      (progressEvent.loaded * 100) / progressEvent.total
+    );
+    files[index].progress = percentCompleted;
+    setFiles([...files]);
+  },
+})
+```
+
 <!-- SCRIPTS -->
 ## Scripts
 ### This assumes you have installed and configured the [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [sam-cli](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
